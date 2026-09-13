@@ -7,8 +7,16 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
+import ChangePassword from "../pages/app/ChangePassword";
 import VerifyEmail from "../pages/auth/VerifyEmail";
 import VerifyEmailSuccess from "../pages/auth/VerifyEmailSuccess";
+import Profile from "../pages/app/Profile";
+import EditProfile from "../pages/app/EditProfile";
+import AccountSettings from "../pages/app/AccountSettings";
+import SecuritySettings from "../pages/app/SecuritySettings";
+import NotificationSettings from "../pages/app/NotificationSettings";
+import NotFound from "../pages/NotFound";
+
 
 function Home() {
   return (
@@ -18,16 +26,7 @@ function Home() {
   );
 }
 
-function NotFound() {
-  return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold">404</h1>
-        <p className="mt-2 text-muted-foreground">Page not found.</p>
-      </div>
-    </div>
-  );
-}
+
 
 function AppRoutes() {
   return (
@@ -47,11 +46,14 @@ function AppRoutes() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route
-          path={ROUTES.PROFILE}
-          element={<div className="p-8">Profile</div>}
-        />
+        <Route path={ROUTES.PROFILE} element={<Profile />} />
+        <Route path={ROUTES.EDIT_PROFILE} element={<EditProfile />} />
+        <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
+        <Route path={ROUTES.ACCOUNT_SETTINGS} element={<AccountSettings />} />
+        <Route path={ROUTES.SECURITY_SETTINGS} element={<SecuritySettings />} />
+        <Route path={ROUTES.NOTIFICATION_SETTINGS} element={<NotificationSettings />} />
       </Route>
+
 
       <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
     </Routes>

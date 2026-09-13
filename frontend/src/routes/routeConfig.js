@@ -4,8 +4,13 @@ export const ROUTES = {
   REGISTER: "/register",
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
+  CHANGE_PASSWORD: "/change-password",
   VERIFY_EMAIL: "/verify-email",
   VERIFY_EMAIL_SUCCESS: "/verify-email-success",
   PROFILE: "/profile",
+  EDIT_PROFILE: "/edit-profile",
+  ACCOUNT_SETTINGS: "/account-settings",
+  SECURITY_SETTINGS: "/security-settings",
+  NOTIFICATION_SETTINGS: "/notification-settings",
   NOT_FOUND: "*",
 };
