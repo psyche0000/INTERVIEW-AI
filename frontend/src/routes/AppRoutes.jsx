@@ -9,6 +9,7 @@ import HowItWorks from "../pages/public/HowItWorks";
 import Pricing from "../pages/public/Pricing";
 import FAQ from "../pages/public/FAQ";
 import Contact from "../pages/public/Contact";
+import NotFound from "../pages/public/NotFound";
 
 function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ function AppRoutes() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
 
       </Routes>
     </BrowserRouter>
