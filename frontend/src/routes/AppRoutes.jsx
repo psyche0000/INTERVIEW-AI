@@ -1,61 +1,75 @@
 import { Route, Routes } from "react-router-dom";
+
+import PublicLayout from "../layouts/PublicLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
-import { ROUTES } from "./routeConfig";
+
+import Home from "../pages/public/Home";
+import About from "../pages/public/About";
+import Features from "../pages/public/Features";
+import HowItWorks from "../pages/public/HowItWorks";
+import Pricing from "../pages/public/Pricing";
+import FAQ from "../pages/public/FAQ";
+import Contact from "../pages/public/Contact";
 
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
-import ChangePassword from "../pages/app/ChangePassword";
 import VerifyEmail from "../pages/auth/VerifyEmail";
 import VerifyEmailSuccess from "../pages/auth/VerifyEmailSuccess";
+
 import Profile from "../pages/app/Profile";
 import EditProfile from "../pages/app/EditProfile";
+import ChangePassword from "../pages/app/ChangePassword";
 import AccountSettings from "../pages/app/AccountSettings";
 import SecuritySettings from "../pages/app/SecuritySettings";
 import NotificationSettings from "../pages/app/NotificationSettings";
+
 import NotFound from "../pages/NotFound";
-
-
-function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Interview AI</h1>
-    </div>
-  );
-}
-
-
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path={ROUTES.HOME} element={<Home />} />
+      {/* Public Website */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
+      </Route>
 
+      {/* Authentication */}
       <Route element={<AuthLayout />}>
-        <Route path={ROUTES.LOGIN} element={<Login />} />
-        <Route path={ROUTES.REGISTER} element={<Register />} />
-        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-        <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route
-          path={ROUTES.VERIFY_EMAIL_SUCCESS}
+          path="/verify-email-success"
           element={<VerifyEmailSuccess />}
         />
       </Route>
 
+      {/* Protected User Area */}
       <Route element={<ProtectedRoute />}>
-        <Route path={ROUTES.PROFILE} element={<Profile />} />
-        <Route path={ROUTES.EDIT_PROFILE} element={<EditProfile />} />
-        <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
-        <Route path={ROUTES.ACCOUNT_SETTINGS} element={<AccountSettings />} />
-        <Route path={ROUTES.SECURITY_SETTINGS} element={<SecuritySettings />} />
-        <Route path={ROUTES.NOTIFICATION_SETTINGS} element={<NotificationSettings />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/account-settings" element={<AccountSettings />} />
+        <Route path="/security-settings" element={<SecuritySettings />} />
+        <Route
+          path="/notification-settings"
+          element={<NotificationSettings />}
+        />
       </Route>
 
-
-      <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
+      {/* Global 404 */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
