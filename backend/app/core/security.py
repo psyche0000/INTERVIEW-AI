@@ -3,18 +3,20 @@ from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
+from app.core.config import settings
+
 
 pwd_context = CryptContext(
     schemes=["bcrypt"],
-    deprecated="auto"
+    deprecated="auto",
 )
 
-SECRET_KEY = "CHANGE_THIS_TO_A_SECRET_KEY"
-ALGORITHM = "HS256"
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 REFRESH_TOKEN_EXPIRE_DAYS = 7
-
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -129,3 +131,44 @@ def verify_reset_token(token: str):
         return None
 
     return payload
+
+def create_email_verification_token(data: dict) -> str:
+    to_encode = data.copy()
+
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=30
+    )
+
+    to_encode.update({
+        "exp": expire,
+        "type": "email_verification",
+    })
+
+    return jwt.encode(
+        to_encode,
+        SECRET_KEY,
+        algorithm=ALGORITHM,
+    )
+
+
+def verify_email_verification_token(token: str):
+    payload = decode_token(token)
+
+    if not payload:
+        return None
+
+    if payload.get("type") != "email_verification":
+        return None
+
+    return payload
+
+
+REVOKED_TOKENS = set()
+
+
+def revoke_token(token: str) -> None:
+    REVOKED_TOKENS.add(token)
+
+
+def is_token_revoked(token: str) -> bool:
+    return token in REVOKED_TOKENS

@@ -34,9 +34,10 @@ def authenticate_user(
         return None
 
     user = User(
-        name="Ankan",
-        email=email,
-        password_hash=hashed_password,
+    name="Ankan",
+    email=email,
+    password_hash=hashed_password,
+    role="admin",
     )
 
     user.id = 1

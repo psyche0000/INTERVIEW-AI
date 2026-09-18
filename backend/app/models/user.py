@@ -1,21 +1,30 @@
-from datetime import datetime
+from sqlalchemy import Column, Integer, String
+
+from app.core.roles import UserRole
+from app.db.base import Base
 
 
-class User:
-    def __init__(
-        self,
-        name: str,
-        email: str,
-        password_hash: str,
-        role: str = "user",
-        is_active: bool = True,
-        is_verified: bool = False,
-    ):
-        self.name = name
-        self.email = email
-        self.password_hash = password_hash
-        self.role = role
-        self.is_active = is_active
-        self.is_verified = is_verified
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    name = Column(String, nullable=False)
+
+    email = Column(
+        String,
+        unique=True,
+        index=True,
+        nullable=False,
+    )
+
+    password_hash = Column(
+        String,
+        nullable=False,
+    )
+
+    role = Column(
+        String,
+        default=UserRole.USER,
+        nullable=False,
+    )

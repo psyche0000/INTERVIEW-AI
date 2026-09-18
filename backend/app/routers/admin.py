@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.core.permissions import require_admin
+from app.core.dependencies import require_admin
 
 
 router = APIRouter(
@@ -10,7 +10,9 @@ router = APIRouter(
 
 
 @router.get("/test")
-def admin_test(current_user=Depends(require_admin)):
+def admin_test(
+    current_user=Depends(require_admin),
+):
     return {
         "message": "Admin access granted",
         "user": current_user,

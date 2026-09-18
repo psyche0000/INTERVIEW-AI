@@ -1,11 +1,17 @@
 from fastapi import APIRouter, HTTPException, status
 
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
 from app.core.security import (
     create_access_token,
     create_reset_token,
     verify_refresh_token,
     verify_reset_token,
     hash_password,
+    create_email_verification_token,
+    verify_email_verification_token,
+    revoke_token
 )
 
 from app.schemas.auth import (
@@ -14,6 +20,7 @@ from app.schemas.auth import (
     TokenResponse,
     ForgotPasswordRequest,
     ResetPasswordRequest,
+    VerifyEmailRequest
 )
 
 from app.schemas.user import (
@@ -179,4 +186,42 @@ def reset_password(data: ResetPasswordRequest):
         "message": "Password reset successfully",
         "email": email,
         "password_hash": new_password_hash,
+    }
+
+# ─────────────────────────────────────────────
+# EMAIL VERIFICATION
+# ─────────────────────────────────────────────
+
+@router.post("/verify-email")
+def verify_email(data: VerifyEmailRequest):
+
+    payload = verify_email_verification_token(
+        data.token
+    )
+
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification token",
+        )
+
+    return {
+        "message": "Email verified successfully",
+        "email": payload.get("email"),
+    }
+
+# ─────────────────────────────────────────────
+# LOGOUT
+# ─────────────────────────────────────────────
+
+@router.post("/logout")
+def logout(
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+):
+    token = credentials.credentials
+
+    revoke_token(token)
+
+    return {
+        "message": "Logged out successfully",
     }
