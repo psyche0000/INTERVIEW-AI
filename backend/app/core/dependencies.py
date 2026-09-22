@@ -1,7 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
-
 from app.core.security import (
     SECRET_KEY,
     ALGORITHM,
@@ -73,3 +72,16 @@ def require_admin(
         )
 
     return current_user
+
+
+def verify_interview_owner(
+    interview_user_id: int,
+    current_user,
+):
+    if interview_user_id != current_user["id"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not authorized to access this interview",
+        )
+
+    return True

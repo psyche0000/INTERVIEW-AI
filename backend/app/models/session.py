@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
 
-class InterviewQuestion(Base):
-    __tablename__ = "interview_questions"
+class InterviewSession(Base):
+    __tablename__ = "interview_sessions"
 
     id: Mapped[int] = mapped_column(
         Integer,
@@ -21,33 +21,31 @@ class InterviewQuestion(Base):
         index=True,
     )
 
-    question_number: Mapped[int] = mapped_column(
+    user_id: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
+        index=True,
     )
 
-    question_text: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-    )
-
-    question_type: Mapped[str] = mapped_column(
+    status: Mapped[str] = mapped_column(
         String(50),
+        default="not_started",
         nullable=False,
     )
 
-    difficulty: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-    )
-
-    topic: Mapped[str | None] = mapped_column(
-        String(100),
+    started_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
         nullable=True,
     )
 
-    is_answered: Mapped[bool] = mapped_column(
-        default=False,
+    ended_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
+    )
+
+    current_question: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
         nullable=False,
     )
 

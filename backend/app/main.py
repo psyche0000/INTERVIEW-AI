@@ -10,7 +10,7 @@ from app.core.exceptions import (
     AppException,
     app_exception_handler,
 )
-
+from app.routers.interviews import router as interviews_router
 setup_logging()
 
 app = FastAPI(
@@ -33,7 +33,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(admin_router)
-
+app.include_router(interviews_router)
 
 @app.get("/health")
 def health_check():
