@@ -29,6 +29,7 @@ from app.services.resume_service import (
     ResumeOwnershipError,
     ResumeService,
 )
+from app.services.resume_storage import ResumeFileError
 
 
 # ---------------------------------------------------------------------------
@@ -109,7 +110,7 @@ async def upload_resume(
             upload_file=file,
         )
 
-    except ValueError as exc:
+    except ResumeFileError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(exc),
