@@ -169,6 +169,51 @@ def test_ensure_resume_storage_directory(tmp_path, monkeypatch):
     assert storage_directory.is_dir()
 
 
+
+
+# ---------------------------------------------------------------------------
+# Save File Tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.anyio
+async def test_save_resume_file_writes_uploaded_content(
+    tmp_path,
+    monkeypatch,
+):
+    """A valid upload should be written to the configured storage directory."""
+
+    storage_directory = tmp_path / "resumes"
+
+    monkeypatch.setattr(
+        resume_storage,
+        "RESUME_STORAGE_DIR",
+        storage_directory,
+    )
+
+    upload_file = UploadFile(
+        filename="My Resume.PDF",
+        file=BytesIO(b"%PDF-test-resume"),
+    )
+
+    stored_filename, file_size, storage_path = (
+        await resume_storage.save_resume_file(
+            upload_file,
+        )
+    )
+
+    saved_file = Path(storage_path)
+
+    assert storage_directory.exists()
+    assert saved_file.exists()
+    assert saved_file.is_file()
+
+    assert stored_filename.endswith(".pdf")
+    assert file_size == len(b"%PDF-test-resume")
+    assert saved_file.read_bytes() == b"%PDF-test-resume"
+    assert saved_file.parent == storage_directory
+    
+
 # ---------------------------------------------------------------------------
 # Delete File Tests
 # ---------------------------------------------------------------------------

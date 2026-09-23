@@ -23,8 +23,10 @@ from app.api.routes.resumes import (
     get_resume_service,
     router,
 )
-from app.services.resume_service import ResumeNotFoundError
-
+from app.services.resume_service import (
+    ResumeNotFoundError,
+    ResumeOwnershipError,
+)
 
 USER_ID = uuid4()
 # OTHER_USER_ID = uuid4()
@@ -63,6 +65,7 @@ class MockResumeService:
         self.update_called = False
         self.delete_called = False
         self.history_called = False
+        self.raise_ownership_error = False
 
     async def upload_resume(self, user_id, upload_file):
         self.upload_called = True
@@ -84,6 +87,11 @@ class MockResumeService:
 
     async def update_resume(self, user_id, resume_id, update_data):
         self.update_called = True
+        
+        if self.raise_ownership_error:
+            raise ResumeOwnershipError(
+                "You do not have access to this resume."
+            )
 
         if resume_id == RESUME_ID:
             return make_resume(user_id=user_id)
@@ -94,7 +102,12 @@ class MockResumeService:
 
     async def delete_resume(self, user_id, resume_id):
         self.delete_called = True
-
+        
+        if self.raise_ownership_error:
+            raise ResumeOwnershipError(
+                "You do not have access to this resume."
+            )
+            
         if resume_id == RESUME_ID:
             return None
 
@@ -104,6 +117,11 @@ class MockResumeService:
 
     async def get_resume_history(self, user_id, resume_id):
         self.history_called = True
+        
+        if self.raise_ownership_error:
+            raise ResumeOwnershipError(
+                "You do not have access to this resume."
+            )
 
         if resume_id == RESUME_ID:
             return []
@@ -197,6 +215,25 @@ def test_get_resume_not_found(test_context):
     assert response.status_code == 404
 
 
+def test_get_resume_rejects_ownership_error(test_context):
+    """Ownership failures should be exposed as HTTP 403."""
+
+    client, service = test_context
+
+    async def mock_get_resume(user_id, resume_id):
+        service.get_called = True
+        raise ResumeOwnershipError(
+            "You do not have access to this resume."
+        )
+
+    service.get_resume = mock_get_resume
+
+    response = client.get(
+        f"/api/v1/resumes/{RESUME_ID}",
+    )
+
+    assert response.status_code == 403
+
 def test_get_resume_rejects_invalid_uuid(test_context):
     client, _ = test_context
 
@@ -232,8 +269,24 @@ def test_update_resume_not_found(test_context):
         f"/api/v1/resumes/{missing_id}",
         json={"original_file_name": "updated.pdf"},
     )
-
+    
     assert response.status_code == 404
+
+
+def test_update_resume_rejects_ownership_error(test_context):
+    """Update ownership failures should be exposed as HTTP 403."""
+
+    client, service = test_context
+    service.raise_ownership_error = True
+
+    response = client.put(
+        f"/api/v1/resumes/{RESUME_ID}",
+        json={"original_file_name": "updated.pdf"},
+    )
+
+    assert response.status_code == 403
+    assert service.update_called is True
+
 
 
 def test_delete_resume(test_context):
@@ -258,6 +311,19 @@ def test_delete_resume_not_found(test_context):
     )
 
     assert response.status_code == 404
+    
+def test_delete_resume_rejects_ownership_error(test_context):
+    """Delete ownership failures should be exposed as HTTP 403."""
+
+    client, service = test_context
+    service.raise_ownership_error = True
+
+    response = client.delete(
+        f"/api/v1/resumes/{RESUME_ID}",
+    )
+
+    assert response.status_code == 403
+    assert service.delete_called is True
 
 
 def test_get_resume_history(test_context):
@@ -281,7 +347,22 @@ def test_get_resume_history_not_found(test_context):
         f"/api/v1/resumes/{missing_id}/history",
     )
 
+
     assert response.status_code == 404
+    
+
+def test_get_resume_history_rejects_ownership_error(test_context):
+    """History ownership failures should be exposed as HTTP 403."""
+
+    client, service = test_context
+    service.raise_ownership_error = True
+
+    response = client.get(
+        f"/api/v1/resumes/{RESUME_ID}/history",
+    )
+
+    assert response.status_code == 403
+    assert service.history_called is True
 
 
 def test_upload_resume(test_context):
