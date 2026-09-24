@@ -1,188 +1,143 @@
-// Import React Router components.
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
-// Import application layout.
+import PublicLayout from "../layouts/PublicLayout";
+import AuthLayout from "../layouts/AuthLayout";
 import AppLayout from "../layouts/AppLayout";
+import ProtectedRoute from "./ProtectedRoute";
 
-// Import application pages.
+// Public pages
+import Home from "../pages/public/Home";
+import About from "../pages/public/About";
+import Features from "../pages/public/Features";
+import HowItWorks from "../pages/public/HowItWorks";
+import Pricing from "../pages/public/Pricing";
+import FAQ from "../pages/public/FAQ";
+import Contact from "../pages/public/Contact";
+
+// Auth pages
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
+import VerifyEmail from "../pages/auth/VerifyEmail";
+import VerifyEmailSuccess from "../pages/auth/VerifyEmailSuccess";
+
+// Application pages
 import Dashboard from "../pages/app/Dashboard";
 import Jobs from "../pages/app/Jobs";
 import Interview from "../pages/app/Interview";
 import VoiceInterview from "../pages/app/VoiceInterview";
-
-// Import Multimodal Interview page.
 import MultimodalInterview from "../pages/app/MultimodalInterview";
-
-// Import Analytics page.
 import Analytics from "../pages/app/Analytics";
+import CareerAssistant from "../pages/app/CareerAssistant";
+import CareerRoadmap from "../pages/app/CareerRoadmap";
+import Profile from "../pages/app/Profile";
+import EditProfile from "../pages/app/EditProfile";
+import ChangePassword from "../pages/app/ChangePassword";
+import AccountSettings from "../pages/app/AccountSettings";
+import SecuritySettings from "../pages/app/SecuritySettings";
+import NotificationSettings from "../pages/app/NotificationSettings";
 
-// Import Resume component.
+// Resume
 import Resume from "../components/resume/Resume";
 
-// Import AI Career Assistant page.
-import CareerAssistant from "../pages/app/CareerAssistant";
-
-// Import Career Roadmap page.
-import CareerRoadmap from "../pages/app/CareerRoadmap";
-
-// ==================================================
-// APPLICATION ROUTES
-// ==================================================
+// 404
+import NotFound from "../pages/NotFound";
 
 function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+      {/* ================= PUBLIC WEBSITE ================= */}
 
-        {/* ==========================================
-            ROOT REDIRECT
-        =========================================== */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
+      </Route>
 
-        {/* Redirect the root URL to the dashboard. */}
+      {/* ================= AUTHENTICATION ================= */}
+
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route
-          path="/"
-          element={
-            <Navigate
-              to="/app/dashboard"
-              replace
-            />
-          }
+          path="/verify-email-success"
+          element={<VerifyEmailSuccess />}
         />
+      </Route>
 
+      {/* ================= PROTECTED APPLICATION ================= */}
 
-        {/* ==========================================
-            APPLICATION LAYOUT ROUTES
-        =========================================== */}
-
-        {/* All application pages use the common AppLayout. */}
+      <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
+          {/* Dashboard */}
+          <Route path="/app/dashboard" element={<Dashboard />} />
 
-          {/* ========================================
-              DASHBOARD ROUTE
-          ========================================= */}
+          {/* Jobs */}
+          <Route path="/app/jobs" element={<Jobs />} />
 
-          {/* Main application dashboard page. */}
-          <Route
-            path="/app/dashboard"
-            element={<Dashboard />}
-          />
+          {/* Resume */}
+          <Route path="/app/resume" element={<Resume />} />
 
-
-          {/* ========================================
-              JOBS ROUTE
-          ========================================= */}
-
-          {/* Jobs listing and management page. */}
-          <Route
-            path="/app/jobs"
-            element={<Jobs />}
-          />
-
-
-          {/* ========================================
-              RESUME ROUTE
-          ========================================= */}
-
-          {/* Resume builder and resume management page. */}
-          <Route
-            path="/app/resume"
-            element={<Resume />}
-          />
-
-
-          {/* ========================================
-              AI MOCK INTERVIEW ROUTE
-          ========================================= */}
-
-          {/* Text-based AI mock interview page. */}
-          <Route
-            path="/app/interview"
-            element={<Interview />}
-          />
-
-
-          {/* ========================================
-              VOICE INTERVIEW ROUTE
-          ========================================= */}
-
-          {/* Voice-based interview practice page. */}
+          {/* Interviews */}
+          <Route path="/app/interview" element={<Interview />} />
           <Route
             path="/app/voice-interview"
             element={<VoiceInterview />}
           />
-
-
-          {/* ========================================
-              MULTIMODAL INTERVIEW ROUTE
-          ========================================= */}
-
-          {/* Video and audio-based multimodal interview page. */}
           <Route
             path="/app/multimodal-interview"
             element={<MultimodalInterview />}
           />
 
+          {/* Analytics */}
+          <Route path="/app/analytics" element={<Analytics />} />
 
-          {/* ========================================
-              ANALYTICS ROUTE
-          ========================================= */}
-
-          {/* Interview, resume, job, skill, and career analytics page. */}
-          <Route
-            path="/app/analytics"
-            element={<Analytics />}
-          />
-
-
-          {/* ========================================
-              AI CAREER ASSISTANT ROUTE
-          ========================================= */}
-
-          {/* AI-powered career assistance page. */}
+          {/* Career */}
           <Route
             path="/app/career-assistant"
             element={<CareerAssistant />}
           />
-
-
-          {/* ========================================
-              CAREER ROADMAP ROUTE
-          ========================================= */}
-
-          {/* Personalized career roadmap page. */}
           <Route
             path="/app/career-roadmap"
             element={<CareerRoadmap />}
           />
 
+          {/* Profile & Settings */}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route
+            path="/change-password"
+            element={<ChangePassword />}
+          />
+          <Route
+            path="/account-settings"
+            element={<AccountSettings />}
+          />
+          <Route
+            path="/security-settings"
+            element={<SecuritySettings />}
+          />
+          <Route
+            path="/notification-settings"
+            element={<NotificationSettings />}
+          />
         </Route>
+      </Route>
 
+      {/* ================= FALLBACK ================= */}
 
-        {/* ==========================================
-            FALLBACK ROUTE
-        =========================================== */}
-
-        {/* Redirect unknown URLs back to the dashboard. */}
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to="/app/dashboard"
-              replace
-            />
-          }
-        />
-
-      </Routes>
-    </BrowserRouter>
+      <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
-
-// Export routes.
 export default AppRoutes;
