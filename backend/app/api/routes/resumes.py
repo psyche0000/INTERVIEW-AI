@@ -18,6 +18,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from starlette import status
 
+from app.core.dependencies import get_resume_service
 from app.schemas.resume import (
     ResumeListResponse,
     ResumeResponse,
@@ -47,20 +48,20 @@ router = APIRouter(
 # ---------------------------------------------------------------------------
 
 
-def get_resume_service() -> ResumeService:
-    """
-    Provide the ResumeService dependency.
+# def get_resume_service() -> ResumeService:
+#     """
+#     Provide the ResumeService dependency.
 
-    The concrete repository implementation will be connected here after
-    Member 3's shared SQLAlchemy foundation is integrated.
+#     The concrete repository implementation will be connected here after
+#     Member 3's shared SQLAlchemy foundation is integrated.
 
-    This placeholder intentionally raises an error instead of silently
-    creating a fake database implementation.
-    """
+#     This placeholder intentionally raises an error instead of silently
+#     creating a fake database implementation.
+#     """
 
-    raise NotImplementedError(
-        "ResumeService dependency is not configured yet."
-    )
+#     raise NotImplementedError(
+#         "ResumeService dependency is not configured yet."
+#     )
 
 
 async def get_current_user_id() -> UUID:
