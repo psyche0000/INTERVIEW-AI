@@ -11,6 +11,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.api.routes.jobs import get_job_service, router
+from app.core.dependencies import require_admin
 from app.models.job import Job
 
 
@@ -48,6 +49,11 @@ def client(service):
     app.include_router(router)
 
     app.dependency_overrides[get_job_service] = lambda: service
+    app.dependency_overrides[require_admin] = lambda: {
+        "id": 1,
+        "email": "admin@example.com",
+        "role": "admin",
+    }
 
     yield TestClient(app)
 

@@ -9,7 +9,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_db
+from app.core.dependencies import get_db, require_admin
 from app.repositories.sqlalchemy_job_repository import SQLAlchemyJobRepository
 from app.schemas.job import (
     JobCreate,
@@ -48,6 +48,7 @@ def get_job_service(
 )
 async def create_job(
     job_data: JobCreate,
+    current_user: dict = Depends(require_admin),
     service: JobService = Depends(get_job_service),
 ):
     """Create a new Job."""
@@ -142,6 +143,7 @@ async def get_job(
 async def update_job(
     job_id: UUID,
     update_data: JobUpdate,
+    current_user: dict = Depends(require_admin),
     service: JobService = Depends(get_job_service),
 ):
     """Update an existing Job."""
@@ -170,6 +172,7 @@ async def update_job(
 )
 async def delete_job(
     job_id: UUID,
+    current_user: dict = Depends(require_admin),
     service: JobService = Depends(get_job_service),
 ):
     """Delete an existing Job."""
