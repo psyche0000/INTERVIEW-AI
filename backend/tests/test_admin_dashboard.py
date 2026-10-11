@@ -35,10 +35,11 @@ def test_dashboard_rejects_non_admin_user():
         app.dependency_overrides.clear()
 
 
+
 def test_dashboard_returns_statistics_for_admin():
     class FakeDB:
         def __init__(self):
-            self.counts = iter([10, 7, 20, 15])
+            self.counts = iter([10, 7, 20, 15, 30, 24])
 
         def scalar(self, statement):
             return next(self.counts)
@@ -59,6 +60,8 @@ def test_dashboard_returns_statistics_for_admin():
             "active_jobs": 7,
             "total_resumes": 20,
             "active_resumes": 15,
+            "total_users": 30,
+            "active_users": 24,
         }
     finally:
         app.dependency_overrides.clear()

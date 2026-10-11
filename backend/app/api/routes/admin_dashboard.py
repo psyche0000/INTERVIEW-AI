@@ -1,4 +1,5 @@
-﻿"""
+﻿
+"""
 Administrator dashboard statistics API.
 """
 
@@ -9,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.core.dependencies import get_db, require_admin
 from app.models.job import Job
 from app.models.resume import Resume
+from app.models.user import User
 from app.schemas.admin_dashboard import AdminDashboardStats
 
 
@@ -45,9 +47,21 @@ def get_dashboard_stats(
         .where(Resume.is_active.is_(True))
     ) or 0
 
+    total_users = db.scalar(
+        select(func.count()).select_from(User)
+    ) or 0
+
+    active_users = db.scalar(
+        select(func.count())
+        .select_from(User)
+        .where(User.is_active.is_(True))
+    ) or 0
+
     return AdminDashboardStats(
         total_jobs=total_jobs,
         active_jobs=active_jobs,
         total_resumes=total_resumes,
         active_resumes=active_resumes,
+        total_users=total_users,
+        active_users=active_users,
     )
