@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI
+from fastapi import FastAPI
 
 from app.api.routes.admin_dashboard import router as admin_dashboard_router
 from app.api.routes.admin_jobs import router as admin_job_router
@@ -9,6 +9,8 @@ from app.api.routes.saved_jobs import router as saved_job_router
 from app.api.routes.admin_feedback import router as admin_feedback_router
 from app.api.routes.users import router as users_router
 from app.api.routes.users import admin_router as admin_users_router
+from app.api.routes.notifications import router as notifications_router
+from app.api.routes.notifications import admin_router as admin_notifications_router
 
 
 app = FastAPI(title="INTERVIEW-AI")
@@ -22,3 +24,5 @@ app.include_router(admin_dashboard_router)
 app.include_router(admin_feedback_router)
 app.include_router(users_router)
 app.include_router(admin_users_router)
+app.include_router(notifications_router)
+app.include_router(admin_notifications_router)

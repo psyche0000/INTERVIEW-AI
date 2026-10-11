@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 from pathlib import Path
 
 from alembic import context
@@ -28,11 +28,11 @@ def include_object(
 ):
     """Restrict Alembic autogeneration to managed tables."""
     if type_ == "table":
-        return name in {"feedback", "users", "interviews"}
+        return name in {"feedback", "users", "interviews", "notifications", "notification_reads"}
 
     table = getattr(obj, "table", None)
     if table is not None:
-        return table.name in {"feedback", "users", "interviews"}
+        return table.name in {"feedback", "users", "interviews", "notifications", "notification_reads"}
 
     return True
 

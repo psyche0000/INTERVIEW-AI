@@ -5,6 +5,8 @@ from app.models.saved_job import SavedJob
 from app.models.feedback import Feedback
 from app.models.user import User
 from app.models.interview import Interview
+from app.models.notification import Notification
+from app.models.notification_read import NotificationRead
 
 __all__ = [
     "Resume",
@@ -14,4 +16,6 @@ __all__ = [
     "Feedback",
     "User",
     "Interview",
+    "Notification",
+    "NotificationRead",
 ]
