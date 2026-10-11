@@ -15,3 +15,4 @@ class AdminDashboardStats(BaseModel):
     active_resumes: int = Field(ge=0)
     total_users: int = Field(ge=0)
     active_users: int = Field(ge=0)
+    total_interviews: int = Field(ge=0)

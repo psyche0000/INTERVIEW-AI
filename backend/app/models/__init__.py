@@ -4,6 +4,7 @@ from app.models.job import Job
 from app.models.saved_job import SavedJob
 from app.models.feedback import Feedback
 from app.models.user import User
+from app.models.interview import Interview
 
 __all__ = [
     "Resume",
@@ -12,4 +13,5 @@ __all__ = [
     "SavedJob",
     "Feedback",
     "User",
+    "Interview",
 ]

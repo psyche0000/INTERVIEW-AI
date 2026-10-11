@@ -8,6 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db, require_admin
+from app.models.interview import Interview
 from app.models.job import Job
 from app.models.resume import Resume
 from app.models.user import User
@@ -56,6 +57,9 @@ def get_dashboard_stats(
         .select_from(User)
         .where(User.is_active.is_(True))
     ) or 0
+    total_interviews = db.scalar(
+    select(func.count()).select_from(Interview)
+    ) or 0
 
     return AdminDashboardStats(
         total_jobs=total_jobs,
@@ -64,4 +68,5 @@ def get_dashboard_stats(
         active_resumes=active_resumes,
         total_users=total_users,
         active_users=active_users,
+        total_interviews=total_interviews,
     )

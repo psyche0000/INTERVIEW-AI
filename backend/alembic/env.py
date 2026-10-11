@@ -28,11 +28,11 @@ def include_object(
 ):
     """Restrict Alembic autogeneration to managed tables."""
     if type_ == "table":
-        return name in {"feedback", "users"}
+        return name in {"feedback", "users", "interviews"}
 
     table = getattr(obj, "table", None)
     if table is not None:
-        return table.name in {"feedback", "users"}
+        return table.name in {"feedback", "users", "interviews"}
 
     return True
 
