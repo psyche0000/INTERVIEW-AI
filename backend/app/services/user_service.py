@@ -79,8 +79,23 @@ class UserService:
         user.password_hash = hash_password(new_password)
         self._save(user)
 
-    def list_users(self, skip: int = 0, limit: int = 50) -> list[User]:
-        return self.repository.list_users(skip=skip, limit=limit)
+    def list_users(
+        self,
+        skip: int = 0,
+        limit: int = 50,
+        search: str | None = None,
+        role: str | None = None,
+        is_active: bool | None = None,
+        is_verified: bool | None = None,
+    ) -> list[User]:
+        return self.repository.list_users(
+            skip=skip,
+            limit=limit,
+            search=search,
+            role=role,
+            is_active=is_active,
+            is_verified=is_verified,
+        )
 
     def update_user_as_admin(
         self,
@@ -124,6 +139,28 @@ class UserService:
 
         return self._save(user)
 
+
+    def delete_user_as_admin(
+        self,
+        user_id: int,
+        current_admin_id: int,
+    ) -> None:
+        user = self.get_user(user_id)
+
+        if user_id == current_admin_id:
+            raise InvalidUserUpdateError(
+                "Administrators cannot delete their own account"
+            )
+
+        if user.role == UserRole.ADMIN and user.is_active:
+            active_admin_count = self.repository.count_active_admins()
+
+            if active_admin_count <= 1:
+                raise InvalidUserUpdateError(
+                    "Cannot delete the last active administrator"
+                )
+
+        self.repository.delete(user)
 
     def _save(self, user: User) -> User:
         try:
