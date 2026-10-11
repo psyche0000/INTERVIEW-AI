@@ -49,3 +49,59 @@ def test_admin_endpoint_accepts_admin_user():
         assert response.json()["message"] == "Admin access granted"
     finally:
         app.dependency_overrides.clear()
+
+
+
+def test_admin_endpoint_rejects_missing_role():
+    app.dependency_overrides[get_current_user] = lambda: {
+        "id": 2,
+        "email": "user@example.com",
+    }
+
+    try:
+        response = client.get("/admin-test")
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Admin access required"
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_admin_endpoint_rejects_none_role():
+    app.dependency_overrides[get_current_user] = lambda: {
+        "id": 2,
+        "email": "user@example.com",
+        "role": None,
+    }
+
+    try:
+        response = client.get("/admin-test")
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Admin access required"
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_admin_endpoint_rejects_unexpected_role():
+    app.dependency_overrides[get_current_user] = lambda: {
+        "id": 2,
+        "email": "user@example.com",
+        "role": "superuser",
+    }
+
+    try:
+        response = client.get("/admin-test")
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Admin access required"
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_admin_endpoint_rejects_non_dict_user():
+    app.dependency_overrides[get_current_user] = lambda: None
+
+    try:
+        response = client.get("/admin-test")
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Admin access required"
+    finally:
+        app.dependency_overrides.clear()

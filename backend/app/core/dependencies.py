@@ -77,7 +77,7 @@ def require_admin(
 ) -> dict:
     """Allow access only to authenticated administrators."""
 
-    if current_user["role"] != "admin":
+    if not isinstance(current_user, dict) or current_user.get("role") != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required",
